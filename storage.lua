@@ -4,8 +4,10 @@ techblox_npcs.spawned_npcs = {}
 function techblox_npcs.load_npc_data()
     local file = io.open(techblox_npcs.data_file, "r")
     if file then
-        local data = minetest.parse_json(file:read("*a"))
-        techblox_npcs.spawned_npcs = data or {}
+        local content = file:read("*a")
+        if content and content ~= "" then
+            techblox_npcs.spawned_npcs = minetest.parse_json(content) or {}
+        end
         file:close()
     end
 end
