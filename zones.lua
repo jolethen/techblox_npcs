@@ -18,10 +18,18 @@ function techblox_npcs.zones.is_in_zone(pos, zone)
 end
 
 function techblox_npcs.zones.get_random_pos_in_zone(zone)
-    if not zone then return nil end
+    if not zone or not zone.pos1 or not zone.pos2 then return nil end
+    
+    -- CRITICAL FIX: math.floor ensures we pass integers to math.random
+    local min_x = math.floor(math.min(zone.pos1.x, zone.pos2.x))
+    local max_x = math.floor(math.max(zone.pos1.x, zone.pos2.x))
+    local min_z = math.floor(math.min(zone.pos1.z, zone.pos2.z))
+    local max_z = math.floor(math.max(zone.pos1.z, zone.pos2.z))
+    local y_level = math.floor(math.max(zone.pos1.y, zone.pos2.y))
+
     return {
-        x = math.random(math.min(zone.pos1.x, zone.pos2.x), math.max(zone.pos1.x, zone.pos2.x)),
-        y = math.max(zone.pos1.y, zone.pos2.y), -- Simplified: assume surface level
-        z = math.random(math.min(zone.pos1.z, zone.pos2.z), math.max(zone.pos1.z, zone.pos2.z))
+        x = math.random(min_x, max_x),
+        y = y_level,
+        z = math.random(min_z, max_z)
     }
 end
